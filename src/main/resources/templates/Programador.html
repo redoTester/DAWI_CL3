@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Mantenimiento Edificio</title>
+
+ 	<!-- Bootstrap CSS -->
+    <link th:href="@{/resources/css/bootstrap.min.css}" rel="stylesheet">
+	<link th:href="@{/resources/css/dataTables.bootstrap5.min.css}" rel="stylesheet">  
+	<link th:href="@{/resources/datepicker/bootstrap-datepicker.css}" rel="stylesheet">
+	<link th:href="@{/resources/css/bootstrap-icons.css}" rel="stylesheet">
+	
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+	
+	<link rel="stylesheet" th:href="@{/resources/alertifyjs/css/alertify.css}">
+	<link rel="stylesheet" th:href="@{/resources/alertifyjs/css/alertify.min.css}"> 
+	
+	
+	
+	<style>
+		.modal-header{
+		color:#fff;
+		background: #428bca;
+		display: flex;
+  		justify-content: center;  		
+		}
+		.help-block {
+		  		color: red;
+		}
+		.form-group.has-error .form-control-label {
+		  color: red;
+		}
+		.form-group.has-error .form-control {
+		  border: 1px solid red;
+		  box-shadow: 0 0 0 0.2rem rgba(250, 16, 0, 0.18);
+		}
+		.alertify .ajs-dialog {
+		    top: 50%;
+		    transform: translateY(-50%);
+		    margin: auto;
+		}
+		.ajs-header{
+			background-color: #286090 !important;
+			color: white !important;
+			/*text-align: center;*/
+			font-size: 18px;
+			font-weight: bold;
+		}
+		.ajs-ok{
+			color: #fff;
+		    background-color: #007bff;
+		    border-color: #007bff;
+		}
+		.ajs-cancel{
+			color: #fff;
+		    background-color: #dc3545;
+		    border-color: #dc3545;
+		}
+	</style>
+	  
+</head>
+<body>
+	<div class="container">
+		
+		<h3 class="text-center">LISTADO DE PROGRAMADORES</h3>	  
+	  	<button type="button" class="btn btn-success" id="btn-consulta">
+	  		Consulta
+	  	</button>
+	  	<button type="button" class="btn btn-primary" id="btn-reporte">
+	  		Reporte
+	  	</button>
+	  	
+	  	<!-- Modal PARA REGISTRAR-->
+		  <div class="modal-dialog modal-dialog-centered modal-lg">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="staticBackdropLabel">PROGRAMADOR</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		        <form id="formProgramador" action="registrar" method="post" class="row g-6">
+		        
+		         <div class="form-group col-md-12">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Código</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-file-person"></i></span>
+				      <input type="text" class="form-control" name="codigo" id="idCodigo" readonly value="0">
+				    </div>
+				  </div>		  
+				  <div class="form-group col-md-6">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Nombre</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-file-person"></i></span>
+				      <input type="text" class="form-control" name="nombre" id="idNombre">
+				    </div>
+				  </div>
+				  <div class="form-group col-md-6">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Apellido</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-file-person"></i></span>
+				      <input type="text" class="form-control" name="apellido" id="idApellido">
+				    </div>
+				  </div>
+				  <div class="form-group col-md-4">
+				    <label for="validationCustomUsername" class="form-label fw-bold">DNI</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-file-person"></i></span>
+				      <input type="text" class="form-control" name="dni" id="idDni">
+				    </div>
+				    </div>
+				     <div class="form-group col-md-3">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Hijos</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-file-person"></i></span>
+				      <input type="text" class="form-control" name="hijos" id="idHijos">
+				    </div>
+				  </div>
+				  <div class="form-group col-md-5">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Sueldo</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-coin"></i></span>
+				      <input type="text" class="form-control" name="sueldo" id="idSueldo">
+				    </div>
+				  </div>
+				  <div class="form-group col-md-12">
+				    <label for="validationCustomUsername" class="form-label fw-bold">Proyecto</label>
+				    <div class="input-group has-validation">
+				      <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-prescription2"></i></span>
+				      <select class="form-select form-control" name="proyecto" id="idProyecto">
+					  <option value=" ">[Seleccione PROYECTO]</option>
+					  <option th:each="row:${proyectos}"
+					  	th:utext="${row.nombre}"
+					  	th:value="${row.codigo}"
+					  />
+					</select>
+				    </div>
+				  </div>
+				  
+				  <br>
+				  <div class="modal-footer">
+			      	<button type="submit" class="btn btn-primary"><i class="bi bi-save2"></i> Registrar</button>
+			      </div>
+				</form>
+		      </div>
+		    </div>
+		  </div>
+	    <!--fin modal PARA REGISTRAR-->
+
+	    <div class="mt-5">
+	    <table id="tableProgramadores" class="table table-striped" style="width:100%">
+        <thead>
+							   <tr>
+					                <th>Código</th>
+					                <th>Nombre</th>
+					                <th>Apellido</th>
+					                <th>dni</th>
+					                <th>hijos</th>
+					                <th>sueldo</th>
+					                <th>Proyecto</th>
+					            </tr>
+							  </thead>
+							  <tbody>
+								
+							  </tbody>
+    </table>
+	</div>    
+	    
+	  
+	</div>
+	
+	<!-- JS principal -->
+	<script th:src="@{/resources/js/jquery-3.5.1.js}"></script>
+
+	<!-- Option 1: Bootstrap Bundle with Popper -->
+    <script th:src="@{/resources/js/bootstrap.bundle.min.js}"></script>
+
+	<!-- JS para la tabla -->
+	<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+	<!--JS para validar  -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.0/js/bootstrapValidator.js"></script>
+	
+	<!--JS para Calendario  -->
+	<script th:src="@{/resources/datepicker/bootstrap-datepicker.js}"></script> 
+	
+	<script	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	
+	<script th:src="@{/resources/alertifyjs/alertify.js}"></script>
+	<script th:src="@{/resources/alertifyjs/alertify.min.js}"></script>
+	
+	
+	<script th:inline="javascript" th:if="${MENSAJE!=null}">
+		let msj;
+		msj=/*[[${MENSAJE}]]*/
+		toastr.success(msj, toastr.options = {
+			"timeOut": "2000",
+			"positionClass " : " toast-top-right ",
+		});
+	</script>
+	
+	
+	<script>
+		$(function() {
+				$('#usr1').datepicker({
+					'format': 'yyyy-mm-dd',
+					'autoclose': true
+				});
+		
+			});
+	</script>
+
+	<script>
+		$(document).ready(function () {
+		    $('#tableProgramadores').DataTable();
+		    $('#modalEdificio')
+	        .on('hidden.bs.modal',function(){
+				$("#formEdificio").bootstrapValidator('resetForm',true);
+				$("#idCodigo").val(0)
+			})
+		    
+		});
+		
+		$(document).on("click","#btn-consulta",function(){
+			let cod;
+			cod=$("#idProyecto").val();
+			//get
+			$.get("consulta?codigo="+cod,function(response){
+				console.log(response);
+				//limpiar tabla
+				$("#tableProgramadores tbody").empty();
+				//variable para el botón
+				let boton="<button type='button' class='btn btn-danger btn-eliminar'>X</button>";
+				//bucle
+				$.each(response,function(index,item){
+					$("#tableProgramadores").append("<tr><td>"+item.codigo+"</td><td>"+item.nombre+"</td><td>"+
+										item.apellido+"</td><td>"+item.dni+"</td><td>"+item.hijos+"</td><td>"+
+										item.sueldo+"</td><td>"+item.proyecto.nombre+"</td></tr>");	
+					
+				})		
+			})
+		})
+		
+		$(document).on("click","#btn-reporte",function(){
+			let cod;
+			cod=$("#idProyecto").val();
+			window.open("http://localhost:8091/Programador/reporte?codigo="+cod,"_black")
+						
+		})
+	</script>
+	
+	
+</body>
+</html>
+
+
+
+
+
+
+
+
+
